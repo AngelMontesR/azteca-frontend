@@ -1,0 +1,18 @@
+# Usa Node.js 20 ligero
+FROM node:20-alpine
+
+# Crea carpeta de trabajo
+WORKDIR /app
+
+# Copia dependencias
+COPY package*.json ./
+RUN npm install
+
+# Copia el resto del código
+COPY . .Angular
+
+# Expone el puerto
+EXPOSE 3000
+
+# Comando de desarrollo con recarga en caliente (ts-node)
+CMD ["npm", "run", "dev"]
