@@ -128,7 +128,8 @@ export class HomeComponent implements OnInit {
 
     this.encryptService.encrypt(this.nombre.trim()).subscribe({
       next: (encryptedName) => {
-        alert(`Nombre encriptado: ${encryptedName}`);
+        console.log('Nombre encriptado recibido:', encryptedName.data);
+        alert(`Nombre encriptado: ${encryptedName.data}`);
       },
       error: (error) => {
         console.error('Error al encriptar el nombre:', error);
