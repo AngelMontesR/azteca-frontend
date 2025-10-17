@@ -1,0 +1,2 @@
+Necesito crear un servicio backend en Node.js con TypeScript que reciba un texto y devuelva una cadena cifrada usando el algoritmo RSA/ECB/PKCS1Padding con codificación UTF-8.
+El backend debe tener un endpoint POST /encrypt que acepte un JSON { text: '...' } y responda con el texto cifrado en Base64
