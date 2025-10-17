@@ -2,9 +2,11 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-declare var webkitSpeechRecognition: any;
-declare var SpeechRecognition: any;
 
+/**
+ * Componente principal que implementa el reconocimiento de voz
+ * para capturar y mostrar el nombre del usuario.
+ */
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -13,22 +15,30 @@ declare var SpeechRecognition: any;
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  /** Nombre capturado por voz o entrada manual */
   nombre: string = '';
+
+  /** Máximo número de caracteres permitidos */
   maxCaracteres: number = 15;
+
+  /** Indica si el reconocimiento de voz está activo */
   isRecording: boolean = false;
+
+  /** Indica si el navegador soporta la API de voz */
   isApiSupported: boolean = true;
+
+  /** Instancia del reconocimiento de voz */
   recognition: any;
 
-  constructor(private zone: NgZone) {} // ✅ inyectamos NgZone
+  constructor(private zone: NgZone) {}
 
-  ngOnInit() {
+  /** Inicializa el reconocimiento de voz al cargar el componente */
+  ngOnInit(): void {
     this.initSpeechRecognition();
   }
 
-  /**
-   * Inicializa el reconocimiento de voz.
-   */
-  initSpeechRecognition() {
+  /** Configura el reconocimiento de voz y sus eventos */
+  initSpeechRecognition(): void {
     const SpeechRecognitionClass =
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
@@ -57,10 +67,9 @@ export class HomeComponent implements OnInit {
       }
 
       const textToShow = (finalTranscript || interimTranscript).trim();
-
       console.log('Reconocido:', textToShow);
 
-      // ✅ Esto es clave: avisamos a Angular que actualice la vista
+      // Actualiza el valor dentro del contexto de Angular
       this.zone.run(() => {
         this.processText(textToShow);
       });
@@ -77,19 +86,17 @@ export class HomeComponent implements OnInit {
     };
   }
 
-  processText(text: string) {
-    // Permite letras con acento, ñ, Ñ, números y espacios
+  /** Limpia y valida el texto capturado */
+  processText(text: string): void {
     let cleanedName = text.replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1\u00E0-\u00FC0-9\s]/g, '');
-
     if (cleanedName.length > this.maxCaracteres) {
       cleanedName = cleanedName.substring(0, this.maxCaracteres);
     }
-
     this.nombre = cleanedName;
   }
 
-
-  toggleVoiceRecognition() {
+  /** Inicia o detiene el reconocimiento de voz */
+  toggleVoiceRecognition(): void {
     if (!this.isApiSupported) {
       alert('Tu navegador no soporta el reconocimiento de voz.');
       return;
@@ -105,17 +112,21 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  onInputChange(value: string) {
+  /** Maneja el evento de cambio en el input manual */
+  onInputChange(value: string): void {
     if (!this.isRecording) {
       this.processText(value);
     }
   }
 
-  comenzar() {
+  /** Envía el nombre al backend para encriptación */
+  comenzar(): void {
     if (this.nombre.trim().length === 0) {
       alert('Por favor, ingresa o dicta un nombre para continuar.');
       return;
     }
+
     console.log(`Enviando al backend para encriptar: ${this.nombre}`);
+    // TODO: integrar servicio de encriptación
   }
 }
