@@ -1,40 +1,59 @@
-<section class="min-h-screen bg-zinc-900 flex flex-col items-center justify-center p-4">
-    <div class="h-10 mb-8 flex space-x-2">
-        <img src="assets/img/logo.png" alt="Logo" class="h-full">
+<section class="min-h-screen bg-zinc-900 flex flex-col items-center justify-center p-6">
+  <!-- Logo -->
+  <div class="h-10 mb-8 flex space-x-2">
+    <img src="assets/img/logo.png" alt="Logo" class="h-full">
+  </div>
+
+  <!-- Título -->
+  <h1 class="text-4xl sm:text-5xl font-extrabold text-zinc-400 text-center mb-4 leading-tight">
+    ¡Te damos la bienvenida a <br>
+    <span class="text-5xl sm:text-6xl text-white">Banco Azteca!</span>
+  </h1>
+
+  <!-- Subtítulo -->
+  <p class="text-zinc-300 text-lg sm:text-xl text-center max-w-sm mb-12">
+    Usa tu préstamo como dinero en efectivo o compra en donde quieras.
+  </p>
+
+  <!-- Formulario -->
+  <form (ngSubmit)="comenzar()" class="w-full max-w-sm px-4">
+    <label for="nombre-input" class="block text-sm text-gray-400 mb-2">
+      ¿Cómo prefieres que te llamemos?
+    </label>
+
+
+    <div class="relative flex items-center">
+      <!-- Campo de texto reactivo -->
+      <input id="nombre-input" type="text" name="nombre" placeholder="Escribe tu nombre" [(ngModel)]="nombre"
+        (ngModelChange)="onInputChange($event)" [attr.maxlength]="maxCaracteres" [disabled]="isRecording"
+        class="w-full bg-transparent border-b border-gray-400 text-white text-lg placeholder-gray-400 pb-2 focus:outline-none focus:border-white transition duration-300 pr-10"
+        pattern="[a-zA-Z0-9\s]*" />
+
+
+      <!-- Botón micrófono -->
+      <button type="button" (click)="toggleVoiceRecognition()" [disabled]="!isApiSupported" [ngClass]="{
+          'text-red-500 animate-pulse': isRecording,
+          'text-gray-400 hover:text-white': !isRecording
+        }" class="absolute right-0 p-1 transition duration-200 focus:outline-none disabled:opacity-50"
+        title="Iniciar reconocimiento de voz">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6" viewBox="0 0 24 24">
+          <path d="M12 14.25a3.75 3.75 0 0 0 3.75-3.75V6a3.75 3.75 0 1 0-7.5 0v4.5a3.75 3.75 0 0 0 3.75 3.75z" />
+          <path
+            d="M6.75 10.5a5.25 5.25 0 0 0 10.5 0v-1.5a.75.75 0 0 1 1.5 0v1.5a6.75 6.75 0 0 1-13.5 0v-1.5a.75.75 0 0 1 1.5 0v1.5z" />
+          <path d="M12 17.25a7.5 7.5 0 0 0 7.5-7.5v-1.5h1.5v1.5a9 9 0 0 1-9 9v1.5H9.75v-1.5H12z" />
+        </svg>
+      </button>
     </div>
 
-    <h1 class="text-4xl sm:text-5xl font-extrabold text-zinc-400 text-center mb-4 leading-tight">
-        ¡Te damos la bienvenida a <br> <span class="text-5xl sm:text-6xl">Banco Azteca!</span>
-    </h1>
-
-    <p class="text-zinc-300 text-lg sm:text-xl text-center max-w-sm mb-12">
-        Usa tu préstamo como dinero en efectivo o compra en donde quieras.
-    </p>
-
-    <div class="w-full max-w-sm px-4">
-
-        <label for="nombre-input" class="block text-sm text-gray-200 mb-2">
-            ¿Cómo prefieres que te llamemos?
-        </label>
-
-        <div class="relative">
-            <input
-                type="text"
-                id="nombre-input"
-                placeholder="Escribe tu nombre"
-                maxlength="15"
-                class="w-full bg-transparent border-b border-gray-200 text-white text-lg placeholder-gray-200 pb-2 focus:outline-none focus:border-white transition duration-300"
-                oninput="updateCharCount(this)"
-            >
-
-            <div id="char-count" class="absolute right-0 bottom-0 text-xs text-gray-200 -mb-5">
-                0/15 caracteres
-            </div>
-        </div>
-        <button
-            class="mt-8 w-full bg-gradient-to-r bg-zinc-400 text-white font-semibold py-3 rounded-lg shadow-lg hover:from-teal-600 hover:to-green-800 transition duration-300"
-        >
-            Comenzar
-        </button>
+    <!-- Contador -->
+    <div class="text-xs text-gray-400 mt-2">
+      {{ nombre.length }}/{{ maxCaracteres }} caracteres
     </div>
+
+    <!-- Botón principal -->
+    <button type="submit" [disabled]="nombre.length === 0"
+      class="mt-8 w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-700 text-white font-semibold py-3 rounded-lg shadow-lg transition duration-300">
+      Comenzar
+    </button>
+  </form>
 </section>
