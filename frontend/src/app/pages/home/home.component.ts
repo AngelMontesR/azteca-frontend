@@ -1,7 +1,7 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { EncryptService } from '../../services/encrypt.service';
 
 /**
  * Componente principal que implementa el reconocimiento de voz
@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
   /** Instancia del reconocimiento de voz */
   recognition: any;
 
-  constructor(private zone: NgZone) {}
+  constructor(private zone: NgZone, private encryptService: EncryptService) {}
 
   /** Inicializa el reconocimiento de voz al cargar el componente */
   ngOnInit(): void {
@@ -126,7 +126,13 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    console.log(`Enviando al backend para encriptar: ${this.nombre}`);
-    // TODO: integrar servicio de encriptación
+    this.encryptService.encrypt(this.nombre.trim()).subscribe({
+      next: (encryptedName) => {
+        alert(`Nombre encriptado: ${encryptedName}`);
+      },
+      error: (error) => {
+        console.error('Error al encriptar el nombre:', error);
+      }
+    });
   }
 }

@@ -5,6 +5,11 @@ import path from 'path';
 const publicKeyPath = path.join(__dirname, '../..', 'keys/public.pem');
 const publicKey = fs.readFileSync(publicKeyPath, 'utf8');
 
+/**
+ * Encripta un texto plano usando una clave pública RSA.
+ * @param text Texto en claro.
+ * @returns Texto encriptado en Base64.
+ */
 export function encryptText(text: string): string {
   const buffer = Buffer.from(text, 'utf8');
   const encrypted = crypto.publicEncrypt(

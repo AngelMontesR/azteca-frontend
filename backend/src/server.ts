@@ -1,22 +1,25 @@
 import express from 'express';
-import bodyParser from 'body-parser';
-import { encryptText } from './routes/encrypt';
+import cors from 'cors';
+import encryptRoutes from './routes/encrypt.routes';
 
 const app = express();
-app.use(bodyParser.json());
-
-app.post('/encrypt', (req, res) => {
-  const { text } = req.body;
-  if (!text) return res.status(400).json({ error: 'Texto requerido' });
-
-  try {
-    const encrypted = encryptText(text);
-    res.json({ encrypted });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error al encriptar' });
-  }
-});
-
 const PORT = 3000;
-app.listen(PORT, () => console.log(`✅ Backend corriendo en http://localhost:${PORT}`));
+
+// Middleware base
+app.use(express.json());
+
+// ✅ Configurar CORS para permitir Angular
+app.use(
+  cors({
+    origin: 'http://localhost:4200',
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type'],
+  })
+);
+
+// ✅ Ruta base para la API
+app.use('/api/encrypt', encryptRoutes);
+
+app.listen(PORT, () => {
+  console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
+});
